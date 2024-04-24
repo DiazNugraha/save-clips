@@ -40,4 +40,16 @@ export class DocumentService {
       };
     }
   }
+
+  removeDocument(id: string): Response {
+    const documents: ContentDocument[] = JSON.parse(
+      localStorage.getItem("documents") ?? "[]"
+    );
+    const newDocuments = documents.filter((doc) => doc.id !== id);
+    localStorage.setItem("documents", JSON.stringify(newDocuments));
+    return {
+      message: "Document deleted successfully",
+      status: StatusResponse.SUCCESS,
+    };
+  }
 }

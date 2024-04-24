@@ -10,11 +10,13 @@ export const HoverEffect = ({
   className,
   isContentCentered = false,
   onClick,
+  onContextMenu,
 }: {
   items: ContentDocument[];
   className?: string;
   isContentCentered?: boolean;
   onClick: (id: string) => void;
+  onContextMenu: (id: string, xPos: number, yPos: number) => void;
 }) => {
   let [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
@@ -52,6 +54,7 @@ export const HoverEffect = ({
           <Card
             isContentCentered={isContentCentered}
             onClick={() => onClick(item.id)}
+            onContextMenu={(xPos, yPos) => onContextMenu(item.id, xPos, yPos)}
             className={item.color ? `bg-[${item.color}]` : ""}
           >
             <CardTitle>{item.title}</CardTitle>
@@ -67,11 +70,13 @@ export const Card = ({
   children,
   isContentCentered,
   onClick,
+  onContextMenu,
 }: {
   className?: string;
   children: React.ReactNode;
   isContentCentered: boolean;
   onClick: () => void;
+  onContextMenu: (xPos: number, yPos: number) => void;
 }) => {
   return (
     <div
@@ -80,6 +85,10 @@ export const Card = ({
         className
       )}
       onClick={onClick}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        onContextMenu(e.clientX, e.clientY);
+      }}
     >
       <div className="relative z-50">
         <div

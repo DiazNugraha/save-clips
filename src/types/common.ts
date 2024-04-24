@@ -14,3 +14,8 @@ export enum StatusResponse {
   SUCCESS = "success",
   ERROR = "error",
 }
+
+export interface ContextMenuItem {
+  xPos: number;
+  yPos: number;
+}
