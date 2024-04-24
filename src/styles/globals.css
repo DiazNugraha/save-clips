@@ -31,3 +31,35 @@ body {
     text-wrap: balance;
   }
 }
+
+.quill.ql-custom {
+
+  .ql-toolbar {
+    border: 0.5px solid rgb(210, 208, 208);
+    background-color: wheat;    
+  }
+
+  .ql-container {
+    border: 1px solid rgb(210, 208, 208);
+    background-color: rgb(202, 201, 201);
+    color: black;        
+  }
+
+ 
+}
+
+@media (min-width: 640px) {
+  .quill.ql-custom {
+    .ql-container {
+      font-size: 14px;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .quill.ql-custom {
+    .ql-container {
+      font-size: 20px;
+    }
+  }
+}

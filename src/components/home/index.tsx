@@ -6,6 +6,11 @@ import { v4 as uuidv4 } from "uuid";
 import DocumentPlusIcon from "../icons/document-plus";
 import { HoverEffect } from "../ui/card-hover-effect";
 import ContextMenu from "./context-menu";
+import { twMerge } from "tailwind-merge";
+import GithubIcon from "../icons/github-icon";
+import LinkedinIcon from "../icons/linkedin-icon";
+import TwitterIcon from "../icons/twitter-icon";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function HomePage() {
   const router = useRouter();
@@ -40,8 +45,11 @@ export default function HomePage() {
     if (!selectedId) {
       return;
     }
-    documentService.removeDocument(selectedId);
+    const response = documentService.removeDocument(selectedId);
     handleResetContext();
+    toast.success(response.message, {
+      duration: 2000,
+    });
     getDocuments();
   };
 
@@ -50,19 +58,24 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="relative w-full h-screen p-10">
-      <HoverEffect
-        items={documents}
-        onClick={handleOnClick}
-        onContextMenu={(id, xPos, yPos) => {
-          setOnOpenContextMenu(!onOpenContextMenu);
-          setSelectedId(id);
-          setContextMenuItem({
-            xPos,
-            yPos,
-          });
-        }}
-      />
+    <div className="w-full h-screen p-10 dark:bg-black bg-white dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center justify-center flex-col">
+      <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+      <InformationBar />
+      <div className="w-full h-full">
+        <HoverEffect
+          items={documents}
+          onClick={handleOnClick}
+          onContextMenu={(id, xPos, yPos) => {
+            setOnOpenContextMenu(!onOpenContextMenu);
+            setSelectedId(id);
+            setContextMenuItem({
+              xPos,
+              yPos,
+            });
+          }}
+        />
+        <ButtonAdd onClick={handleClickNewDocument} />
+      </div>
       <ContextMenu
         isOpen={onOpenContextMenu}
         onClose={() => handleResetContext()}
@@ -72,7 +85,7 @@ export default function HomePage() {
           handleRemoveDocument();
         }}
       />
-      <ButtonAdd onClick={handleClickNewDocument} />
+      <Toaster position="top-right" />
     </div>
   );
 }
@@ -84,6 +97,53 @@ function ButtonAdd({ onClick }: Readonly<{ onClick: () => void }>) {
       onClick={onClick}
     >
       <DocumentPlusIcon className="cursor-pointer w-10 h-10" />
+    </div>
+  );
+}
+
+function InformationBar() {
+  return (
+    <div className="w-full bg-black border-[1px] p-5 border-slate-600 rounded-2xl text-white z-10 flex flex-col md:flex-row justify-between gap-3">
+      <p className="text-4xl font-bold">Save Clips</p>
+      <div className="flex gap-2">
+        <Circle className="w-10 h-10">
+          <a href="https://github.com/DiazNugraha/save-clips" target="_blank">
+            <GithubIcon />
+          </a>
+        </Circle>
+        <Circle className="w-10 h-10">
+          <a
+            href="https://www.linkedin.com/in/diaz-nugraha-820342246/"
+            target="_blank"
+          >
+            <LinkedinIcon />
+          </a>
+        </Circle>
+        <Circle className="w-10 h-10">
+          <a href="https://twitter.com/NugrahaDiaz_" target="_blank">
+            <TwitterIcon />
+          </a>
+        </Circle>
+      </div>
+    </div>
+  );
+}
+
+function Circle({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className: string;
+}) {
+  return (
+    <div
+      className={twMerge(
+        "w-3 h-3 flex items-center justify-center cursor-pointer rounded-full bg-slate-600",
+        className
+      )}
+    >
+      {children}
     </div>
   );
 }

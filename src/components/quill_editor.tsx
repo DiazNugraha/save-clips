@@ -42,6 +42,7 @@ const CustomQuillEditor: React.FC<CustomQuillEditorProps> = ({
   return (
     <ReactQuill
       id="editor"
+      className="ql-custom"
       theme="snow"
       modules={modules}
       value={value}

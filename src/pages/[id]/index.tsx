@@ -13,7 +13,7 @@ export default function Page() {
   }, [router.isReady]);
 
   return (
-    <div className="w-full p-10">
+    <div className="w-full">
       <Content id={idDocument} />
     </div>
   );
