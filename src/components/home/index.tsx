@@ -1,9 +1,10 @@
 import { documentService } from "@/services";
 import { ContentDocument } from "@/types/common";
 import { useEffect, useState } from "react";
-import Card from "./card";
 import { useRouter } from "next/router";
 import { v4 as uuidv4 } from "uuid";
+import DocumentPlusIcon from "../icons/document-plus";
+import { HoverEffect } from "../ui/card-hover-effect";
 
 export default function HomePage() {
   const router = useRouter();
@@ -11,7 +12,7 @@ export default function HomePage() {
 
   const getDocuments = () => {
     const data = documentService.getDocuments();
-    if (data) {      
+    if (data) {
       setDocuments(data);
     }
   };
@@ -30,16 +31,23 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="relative w-full h-full">
-      {documents.map((document, index) => {
-        return <Card key={index} document={document} onClick={handleOnClick} />;
-      })}
-      <div
-        className="absolute top-1 right-1 w-40 h-40 bg-white text-4xl flex items-center justify-center rounded-full text-black"
-        onClick={handleClickNewDocument}
-      >
-        +
-      </div>
+    <div className="relative w-full h-screen">
+      <HoverEffect
+        items={documents}        
+        onClick={handleOnClick}
+      />
+      <ButtonAdd onClick={handleClickNewDocument} />
+    </div>
+  );
+}
+
+function ButtonAdd({ onClick }: Readonly<{ onClick: () => void }>) {
+  return (
+    <div
+      className="absolute bottom-6 right-6 w-20 h-20 hover:scale-110 bg-white text-4xl flex items-center justify-center rounded-full text-black"
+      onClick={onClick}
+    >
+      <DocumentPlusIcon className="cursor-pointer w-10 h-10" />
     </div>
   );
 }
