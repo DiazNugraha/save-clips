@@ -13,7 +13,7 @@ export class DocumentService {
 
   getDocuments(): ContentDocument[] {
     const documents: ContentDocument[] = JSON.parse(
-      localStorage.getItem("documents") ?? ""
+      localStorage.getItem("documents") ?? "[]"
     );
     return documents;
   }
