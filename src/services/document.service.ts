@@ -3,7 +3,7 @@ import { ContentDocument, Response, StatusResponse } from "@/types/common";
 export class DocumentService {
   getDocument(id: string): ContentDocument | null {
     const documents: ContentDocument[] = JSON.parse(
-      localStorage.getItem("documents") ?? ""
+      localStorage.getItem("documents") ?? "[]"
     );
     const document = documents.find((doc) => doc.id === id);
     if (document) return document;
