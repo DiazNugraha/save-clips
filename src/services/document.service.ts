@@ -41,6 +41,14 @@ export class DocumentService {
     }
   }
 
+  saveBatchDocuments(documents: ContentDocument[]): Response {
+    localStorage.setItem("documents", JSON.stringify(documents));
+    return {
+      message: "Documents created successfully",
+      status: StatusResponse.SUCCESS,
+    };
+  }
+
   removeDocument(id: string): Response {
     const documents: ContentDocument[] = JSON.parse(
       localStorage.getItem("documents") ?? "[]"

@@ -11,6 +11,8 @@ import GithubIcon from "../icons/github-icon";
 import LinkedinIcon from "../icons/linkedin-icon";
 import TwitterIcon from "../icons/twitter-icon";
 import toast, { Toaster } from "react-hot-toast";
+import ExportIcon from "../icons/export-icon";
+import ImportIcon from "../icons/import-icon";
 
 export default function HomePage() {
   const router = useRouter();
@@ -33,6 +35,43 @@ export default function HomePage() {
   const handleClickNewDocument = () => {
     const newId = uuidv4();
     handleOnClick(newId);
+  };
+
+  const handleExport = () => {
+    const data = documentService.getDocuments();
+    if (data) {
+      const blob = new Blob([JSON.stringify(data)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      const date = new Date();
+      link.download = `documents-${date.getTime()}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+  };
+
+  const handleImport = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "application/json";
+    input.onchange = async () => {
+      if (input.files && input.files.length > 0) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+          if (e.target?.result) {
+            const data = JSON.parse(e.target.result as string);
+            documentService.saveBatchDocuments(data);
+            getDocuments();
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
   };
 
   const handleResetContext = () => {
@@ -61,6 +100,26 @@ export default function HomePage() {
     <div className="w-full h-screen p-10 dark:bg-black bg-white dark:bg-grid-white/[0.2] bg-grid-black/[0.2] relative flex items-center justify-center flex-col">
       <div className="absolute pointer-events-none inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
       <InformationBar />
+      <div className="w-full flex gap-x-3 mt-3 justify-start z-10">
+        <button
+          className="bg-black border-[1px] p-5 border-slate-600 rounded-2xl text-white flex items-center gap-2"
+          onClick={handleImport}
+        >
+          Import
+          <Circle className="w-10 h-10">
+            <ImportIcon color="white" />
+          </Circle>
+        </button>
+        <button
+          className="bg-black border-[1px] p-5 border-slate-600 rounded-2xl text-white flex items-center gap-2"
+          onClick={handleExport}
+        >
+          <span>Export</span>
+          <Circle className="w-10 h-10">
+            <ExportIcon color="white" />
+          </Circle>
+        </button>
+      </div>
       <div className="w-full h-full">
         <HoverEffect
           items={documents}
