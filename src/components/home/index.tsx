@@ -64,7 +64,10 @@ export default function HomePage() {
         reader.onload = async (e) => {
           if (e.target?.result) {
             const data = JSON.parse(e.target.result as string);
-            documentService.saveBatchDocuments(data);
+            const response = documentService.saveBatchDocuments(data);
+            toast.success(response.message, {
+              duration: 2000,
+            });
             getDocuments();
           }
         };
